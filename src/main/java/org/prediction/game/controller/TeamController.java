@@ -1,12 +1,11 @@
 package org.prediction.game.controller;
 
 import org.prediction.game.domain.Team;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/teams")
@@ -24,8 +23,22 @@ public class TeamController {
         teams.add(arsenal);
     }
 
-    @GetMapping(value = "all")
+    @GetMapping
     public List<Team> getAll() {
         return teams;
+    }
+
+    @PostMapping
+    public List<Team> createTeam(@RequestBody Team team) {
+        teams.add(team);
+        return teams;
+    }
+
+    @GetMapping(value = "/{location}")
+    public List<Team> getTeamBy(@PathVariable String location) {
+        return teams
+                .stream()
+                .filter((Team t) -> t.getLocation().equals(location))
+                .collect(Collectors.toList());
     }
 }
